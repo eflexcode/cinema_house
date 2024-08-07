@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: Cinema House
+  data:
+    mongodb:
+      database: Cinema House
+      port: 27017
+      host: localhost
