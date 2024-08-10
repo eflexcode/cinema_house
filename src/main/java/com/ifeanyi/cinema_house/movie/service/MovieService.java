@@ -11,10 +11,10 @@ import java.util.List;
 
 public interface MovieService {
 
-    Movie create(MovieModel movieModel);
+    Movie create(MovieModel movieModel) throws NotFoundExceptionHandler;
     Movie get(String id) throws NotFoundExceptionHandler;
     List<Movie> getByTitle(String title, Pageable pageable);
+    List<Movie> getByGenre(String genres,Pageable pageable);
     Movie update(String id,MovieModel movieModel) throws NotFoundExceptionHandler;
-    void delete(String id) throws NotFoundExceptionHandler;
-
+    void delete(String admin, String id) throws NotFoundExceptionHandler;
 }

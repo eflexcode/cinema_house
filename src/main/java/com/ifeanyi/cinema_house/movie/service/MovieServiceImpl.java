@@ -1,6 +1,6 @@
 package com.ifeanyi.cinema_house.movie.service;
 
-import com.ifeanyi.cinema_house.admin.entity.Admin;
+import com.ifeanyi.cinema_house.admin.service.AdminService;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.movie.entity.Movie;
 import com.ifeanyi.cinema_house.movie.model.MovieModel;
@@ -18,10 +18,12 @@ import java.util.List;
 public class MovieServiceImpl implements MovieService{
 
     private final MovieRepo movieRepo;
+    private final AdminService adminService;
 
     @Override
-    public Movie create(MovieModel movieModel) {
+    public Movie create(MovieModel movieModel) throws NotFoundExceptionHandler {
 
+        adminService.get( movieModel.getUpdatedByAdmin());
         Movie movie = new Movie();
         BeanUtils.copyProperties(movieModel,movie);
 
@@ -39,16 +41,43 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public List<Movie> getByTitle(String title, Pageable pageable) {
-        return movieRepo.findByTitle(title, pageable).toList();
+        return movieRepo.findByTitleContainingIgnoreCase(title, pageable).toList();
+    }
+
+    @Override
+    public List<Movie> getByGenre(String genres, Pageable pageable) {
+        return movieRepo.findByGenresContainingIgnoreCase(genres, pageable).toList();
     }
 
     @Override
     public Movie update(String id, MovieModel movieModel) throws NotFoundExceptionHandler {
-        return null;
+
+        Movie movie = get(id);
+        movie.setTitle(movieModel.getTitle() != null ? movieModel.getTitle() : movie.getTitle());
+        movie.setDescription(movieModel.getDescription() != null ? movieModel.getDescription() : movie.getDescription());
+        movie.setShortDescription(movieModel.getShortDescription() != null ? movieModel.getShortDescription() : movie.getShortDescription());
+        movie.setGenres(movieModel.getGenres() != null ? movieModel.getGenres() : movie.getGenres());
+        movie.setReleaseDate(movieModel.getReleaseDate() != null ? movieModel.getReleaseDate() : movie.getReleaseDate());
+        movie.setLikeCount(movieModel.getLikeCount() != null ? movieModel.getLikeCount() : movie.getLikeCount());
+        movie.setDisLikeCount(movieModel.getDisLikeCount() != null ? movieModel.getDisLikeCount() : movie.getDisLikeCount());
+        movie.setVerticalImageUrl(movieModel.getVerticalImageUrl() != null ? movieModel.getVerticalImageUrl() : movie.getVerticalImageUrl());
+        movie.setHorizontalImageUrl(movieModel.getHorizontalImageUrl() != null ? movieModel.getHorizontalImageUrl() : movie.getHorizontalImageUrl());
+
+        adminService.get( movieModel.getUpdatedByAdmin());
+        movie.setUpdatedByAdmin(movieModel.getUpdatedByAdmin() != null ? movieModel.getUpdatedByAdmin() : movie.getUpdatedByAdmin());
+
+        if (movieModel.getCastIds() != null){
+            movie.setCastIds(movieModel.getCastIds());
+        }
+
+        movie.setUpdatedAt(new Date());
+
+        return movieRepo.save(movie);
     }
 
     @Override
-    public void delete(String id) throws NotFoundExceptionHandler {
+    public void delete(String admin, String id) throws NotFoundExceptionHandler {
+        adminService.get(admin);
         movieRepo.delete(get(id));
     }
 

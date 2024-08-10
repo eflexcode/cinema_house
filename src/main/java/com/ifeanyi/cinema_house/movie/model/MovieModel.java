@@ -15,7 +15,9 @@ public class MovieModel {
     private Date releaseDate;
     private Integer likeCount;
     private Integer disLikeCount;
-    private List<Cast> casts;
+    private String updatedByAdmin;
+    private String createdByAdmin;
+    private List<String> castIds;
     private String verticalImageUrl;
     private String horizontalImageUrl;
 }

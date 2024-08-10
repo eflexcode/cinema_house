@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MovieRepo extends MongoRepository<Movie,String> {
 
-    Page<Movie> findByTitle(String title,Pageable pageable);
+    Page<Movie> findByTitleContainingIgnoreCase(String title,Pageable pageable);
+    Page<Movie> findByGenresContainingIgnoreCase(String genres,Pageable pageable);
 }
