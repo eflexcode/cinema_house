@@ -5,12 +5,16 @@ import com.ifeanyi.cinema_house.admin.model.AdminModel;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.movie.entity.Movie;
 import com.ifeanyi.cinema_house.movie.model.MovieModel;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface MovieService {
 
     Movie create(MovieModel movieModel);
     Movie get(String id) throws NotFoundExceptionHandler;
-    Admin update(String id,MovieModel movieModel) throws NotFoundExceptionHandler;
+    List<Movie> getByTitle(String title, Pageable pageable);
+    Movie update(String id,MovieModel movieModel) throws NotFoundExceptionHandler;
     void delete(String id) throws NotFoundExceptionHandler;
 
 }

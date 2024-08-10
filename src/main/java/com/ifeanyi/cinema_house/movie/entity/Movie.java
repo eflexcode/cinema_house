@@ -21,4 +21,6 @@ public class Movie {
     private List<Cast> casts;
     private String verticalImageUrl;
     private String horizontalImageUrl;
+    private Date createdAt;
+    private Date updatedAt;
 }
