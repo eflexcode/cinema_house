@@ -23,7 +23,7 @@ public class MovieServiceImpl implements MovieService{
     @Override
     public Movie create(MovieModel movieModel) throws NotFoundExceptionHandler {
 
-        adminService.get( movieModel.getUpdatedByAdmin());
+        adminService.get(movieModel.getUpdatedByAdmin());
         Movie movie = new Movie();
         BeanUtils.copyProperties(movieModel,movie);
 
@@ -63,7 +63,7 @@ public class MovieServiceImpl implements MovieService{
         movie.setVerticalImageUrl(movieModel.getVerticalImageUrl() != null ? movieModel.getVerticalImageUrl() : movie.getVerticalImageUrl());
         movie.setHorizontalImageUrl(movieModel.getHorizontalImageUrl() != null ? movieModel.getHorizontalImageUrl() : movie.getHorizontalImageUrl());
 
-        adminService.get( movieModel.getUpdatedByAdmin());
+        adminService.get(movieModel.getUpdatedByAdmin());
         movie.setUpdatedByAdmin(movieModel.getUpdatedByAdmin() != null ? movieModel.getUpdatedByAdmin() : movie.getUpdatedByAdmin());
 
         if (movieModel.getCastIds() != null){
