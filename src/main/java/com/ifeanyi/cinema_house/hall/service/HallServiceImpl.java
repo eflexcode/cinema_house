@@ -47,7 +47,7 @@ public class HallServiceImpl implements HallService {
 
     @Override
     public Hall update(String id, HallModel hallModel) throws NotFoundExceptionHandler {
-
+        adminService.get(hallModel.getUpdatedByAdmin());
         Hall hall = get(id);
         hall.setHallNumber(hallModel.getHallNumber() != null ? hallModel.getHallNumber() : hall.getHallNumber());
         hall.setAvailableSeat(hallModel.getAvailableSeat() != null ? hallModel.getAvailableSeat() : hall.getAvailableSeat());

@@ -9,5 +9,6 @@ public class HallModel {
     private Integer availableSeat;
     private Integer soldSeat;
     private String showingId;
+    private String updatedByAdmin;
 
 }
