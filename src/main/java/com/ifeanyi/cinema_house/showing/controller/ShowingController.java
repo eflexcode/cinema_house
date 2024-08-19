@@ -16,6 +16,7 @@ import java.util.List;
 public class ShowingController {
 
     private final ShowingService showingService;
+
     @PostMapping("/api/showing/admin")
     public Showing create(@RequestBody ShowingModel showingModel) throws NotFoundExceptionHandler {
         return showingService.create(showingModel);
