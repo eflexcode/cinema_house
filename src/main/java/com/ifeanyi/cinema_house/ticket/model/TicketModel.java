@@ -8,5 +8,6 @@ public class TicketModel {
 
     private String HallId;
     private String ownerId;
+    private boolean used;
 
 }

@@ -17,4 +17,9 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ErrorModel(notFoundExceptionHandler.getMessage(),new Date(),HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ForbiddenExceptionHandler.class)
+    public ResponseEntity<ErrorModel>  forbiddenExceptionHandler(ForbiddenExceptionHandler forbiddenExceptionHandler){
+        return new ResponseEntity<>(new ErrorModel(forbiddenExceptionHandler.getMessage(),new Date(),HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
+    }
+
 }
