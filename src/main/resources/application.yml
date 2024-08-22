@@ -3,6 +3,6 @@ spring:
     name: Cinema House
   data:
     mongodb:
-      database: Cinema House
+      database: CinemaHouse
       port: 27017
       host: localhost
