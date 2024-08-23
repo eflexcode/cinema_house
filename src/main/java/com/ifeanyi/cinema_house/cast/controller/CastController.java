@@ -27,7 +27,7 @@ public class CastController {
     public Cast get(@PathVariable String id) throws NotFoundExceptionHandler {
         return castService.get(id);
     }
-    @GetMapping("/api/movie/{name}")
+    @GetMapping("/api/cast/{name}")
     public List<Cast> getByName(@PathVariable String name, Pageable pageable) {
         return castService.getByName(name, pageable);
     }

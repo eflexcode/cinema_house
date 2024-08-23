@@ -22,16 +22,17 @@ public class MovieController {
     public Movie create(@RequestBody MovieModel movieModel) throws NotFoundExceptionHandler {
         return movieService.create(movieModel);
     }
+
     @GetMapping("/api/movie/{id}")
     public Movie get(@PathVariable String id) throws NotFoundExceptionHandler {
         return movieService.get(id);
     }
-    @GetMapping("/api/movie/{title}")
-    public List<Movie> getByTitle(@PathVariable String title, Pageable pageable) {
+    @GetMapping("/api/movie/title")
+    public List<Movie> getByTitle(@RequestParam String title, Pageable pageable) {
         return movieService.getByTitle(title, pageable);
     }
-    @GetMapping("/api/movie/{genres}")
-    public List<Movie> getByGenre(@PathVariable String genres, Pageable pageable) {
+    @GetMapping("/api/movie/genres")
+    public List<Movie> getByGenre(@RequestParam String genres, Pageable pageable) {
         return movieService.getByGenre(genres, pageable);
     }
     @PutMapping("/api/admin/movie/{id}")
