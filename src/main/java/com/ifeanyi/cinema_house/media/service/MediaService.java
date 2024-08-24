@@ -8,8 +8,8 @@ import java.io.IOException;
 
 public interface MediaService {
 
-    String uploadHoriMovie(MultipartFile multipartFile, Upload upload) throws IOException, NotFoundExceptionHandler;
-    String uploadVertMovie(MultipartFile multipartFile, Upload upload) throws IOException, NotFoundExceptionHandler;
-    String uploadCast(MultipartFile multipartFile, Upload upload) throws IOException, NotFoundExceptionHandler;
+    String uploadHoriMovie(MultipartFile multipartFile, String id, String admin) throws IOException, NotFoundExceptionHandler;
+    String uploadVertMovie(MultipartFile multipartFile, String id, String admin) throws IOException, NotFoundExceptionHandler;
+    String uploadCast(MultipartFile multipartFile, String id, String admin) throws IOException, NotFoundExceptionHandler;
     byte[] download(String filename);
 }

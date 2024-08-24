@@ -71,6 +71,7 @@ public class MovieServiceImpl implements MovieService{
         }
 
         movie.setUpdatedAt(new Date());
+        System.out.println("llllllllllllllllllllllllllllllllllllllllllllll");
 
         return movieRepo.save(movie);
     }

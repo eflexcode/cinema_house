@@ -22,7 +22,6 @@ public class MovieController {
     public Movie create(@RequestBody MovieModel movieModel) throws NotFoundExceptionHandler {
         return movieService.create(movieModel);
     }
-
     @GetMapping("/api/movie/{id}")
     public Movie get(@PathVariable String id) throws NotFoundExceptionHandler {
         return movieService.get(id);

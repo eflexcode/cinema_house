@@ -27,12 +27,12 @@ public class CastController {
     public Cast get(@PathVariable String id) throws NotFoundExceptionHandler {
         return castService.get(id);
     }
-    @GetMapping("/api/cast/{name}")
-    public List<Cast> getByName(@PathVariable String name, Pageable pageable) {
+    @GetMapping("/api/cast")
+    public List<Cast> getByName(@RequestParam String name, Pageable pageable) {
         return castService.getByName(name, pageable);
     }
     @PutMapping("/api/admin/cast/{id}")
-    public Cast update(@PathVariable String id, CastModel castModel) throws NotFoundExceptionHandler {
+    public Cast update(@PathVariable String id,@RequestBody CastModel castModel) throws NotFoundExceptionHandler {
         return castService.update(id, castModel);
     }
     @DeleteMapping("/api/admin/cast/{admin}/{id}")

@@ -27,6 +27,7 @@ public class CastServiceImpl implements CastService {
 
         Cast cast = new Cast();
         BeanUtils.copyProperties(castModel, cast);
+        cast.setUpdatedByAdmin(castModel.getCreatedByAdmin());
 
         Date date = new Date();
         cast.setCreatedAt(date);

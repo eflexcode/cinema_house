@@ -26,6 +26,7 @@ public class HallServiceImpl implements HallService {
         Hall hall = new Hall();
 
         BeanUtils.copyProperties(hallModel, hall);
+        hall.setCreatedByAdmin(hallModel.getUpdatedByAdmin());
 
         return repo.save(hall);
     }

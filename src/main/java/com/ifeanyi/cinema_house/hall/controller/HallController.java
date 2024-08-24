@@ -18,7 +18,7 @@ public class HallController {
     private final HallService hallService;
 
     @PostMapping("/api/admin/hall")
-    public Hall create(HallModel hallModel) throws NotFoundExceptionHandler {
+    public Hall create(@RequestBody HallModel hallModel) throws NotFoundExceptionHandler {
         return hallService.create(hallModel);
     }
 
@@ -27,12 +27,12 @@ public class HallController {
         return hallService.get(id);
     }
 
-    @GetMapping("/api/hall/{showingId}")
+    @GetMapping("/api/hall/showing/{showingId}")
     public List<Hall> findByShowingId(@PathVariable String showingId, Pageable pageable) {
         return hallService.findByShowingId(showingId, pageable);
     }
 
-    @GetMapping("/api/hall/{hallNumber}")
+    @GetMapping("/api/hall/number/{hallNumber}")
     public Hall findByHallNumber(@PathVariable Integer hallNumber) throws NotFoundExceptionHandler {
         return hallService.findByHallNumber(hallNumber);
     }

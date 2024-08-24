@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class ShowingModel {
+
     private String moveId;
     private Date showingTime;
     private String hallId;

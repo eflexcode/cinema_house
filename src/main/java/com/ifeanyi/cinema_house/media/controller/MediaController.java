@@ -19,17 +19,17 @@ public class MediaController {
 
     private final MediaService mediaService;
 
-    @PostMapping("/api/media/hori")
-    public String uploadHorizontal(@RequestParam("file") MultipartFile multipartFile, @RequestBody Upload upload) throws IOException, NotFoundExceptionHandler {
-        return mediaService.uploadHoriMovie(multipartFile, upload);
+    @PostMapping("/api/media/hori/{id}/{admin}")
+    public String uploadHorizontal(@RequestParam("file") MultipartFile multipartFile, @PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler {
+        return mediaService.uploadHoriMovie(multipartFile, id,admin);
     }
-    @PostMapping("/api/media/vert")
-    public String uploadVertical(@RequestParam("file") MultipartFile multipartFile, @RequestBody Upload upload) throws IOException, NotFoundExceptionHandler {
-        return mediaService.uploadVertMovie(multipartFile, upload);
+    @PostMapping("/api/media/vert/{id}/{admin}")
+    public String uploadVertical(@RequestParam("file") MultipartFile multipartFile,@PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler {
+        return mediaService.uploadVertMovie(multipartFile, id,admin);
     }
-    @PostMapping("/api/media/cast")
-    public String uploadCast(@RequestParam("file") MultipartFile multipartFile, @RequestBody Upload upload) throws IOException, NotFoundExceptionHandler {
-        return mediaService.uploadCast(multipartFile, upload);
+    @PostMapping("/api/media/cast/{id}/{admin}")
+    public String uploadCast(@RequestParam("file") MultipartFile multipartFile,@PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler {
+        return mediaService.uploadCast(multipartFile, id,admin);
     }
     @GetMapping("/api/media/{filename}")
     public ResponseEntity<?> download(@PathVariable String filename) throws IOException, NotFoundExceptionHandler {
