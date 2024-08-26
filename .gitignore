@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+!/src/main/java/com/ifeanyi/cinema_house/auth/Util.java
