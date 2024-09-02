@@ -19,7 +19,11 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ForbiddenExceptionHandler.class)
     public ResponseEntity<ErrorModel>  forbiddenExceptionHandler(ForbiddenExceptionHandler forbiddenExceptionHandler){
-        return new ResponseEntity<>(new ErrorModel(forbiddenExceptionHandler.getMessage(),new Date(),HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorModel(forbiddenExceptionHandler.getMessage(),new Date(),HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
+    }
+    @ExceptionHandler(JwtExceptionHandler.class)
+    public ResponseEntity<ErrorModel>  jwtExceptionHandler(JwtExceptionHandler jwtExceptionHandler){
+        return new ResponseEntity<>(new ErrorModel(jwtExceptionHandler.getMessage(),new Date(),HttpStatus.UNAUTHORIZED.value()), HttpStatus.UNAUTHORIZED);
     }
 
 }

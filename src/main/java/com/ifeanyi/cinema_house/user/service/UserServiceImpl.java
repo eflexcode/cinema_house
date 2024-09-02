@@ -6,6 +6,8 @@ import com.ifeanyi.cinema_house.user.model.UserModel;
 import com.ifeanyi.cinema_house.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,5 +45,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(String id) throws NotFoundExceptionHandler {
         repository.delete(get(id));
+    }
+
+    @Override
+    public User getLoggedInUser() throws NotFoundExceptionHandler {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+        return get(userId);
     }
 }

@@ -10,5 +10,6 @@ public interface UserService {
     User get(String id) throws NotFoundExceptionHandler;
     User update(String id,UserModel userModel) throws NotFoundExceptionHandler;
     void delete(String id) throws NotFoundExceptionHandler;
+    User getLoggedInUser() throws NotFoundExceptionHandler;
 
 }
