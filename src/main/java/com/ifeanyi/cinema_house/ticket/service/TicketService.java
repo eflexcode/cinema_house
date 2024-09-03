@@ -19,7 +19,7 @@ public interface TicketService {
 
     List<Ticket> getByHallId(String hallId, Pageable pageable);
 
-    void delete(String admin, String id) throws NotFoundExceptionHandler;
+    void delete(String admin, String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler;
 
 
 }

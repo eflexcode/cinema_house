@@ -1,6 +1,6 @@
 package com.ifeanyi.cinema_house.ticket.service;
 
-import com.ifeanyi.cinema_house.admin.service.AdminService;
+import com.ifeanyi.cinema_house.Util;
 import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.hall.entity.Hall;
@@ -8,6 +8,8 @@ import com.ifeanyi.cinema_house.hall.service.HallService;
 import com.ifeanyi.cinema_house.ticket.entity.Ticket;
 import com.ifeanyi.cinema_house.ticket.model.TicketModel;
 import com.ifeanyi.cinema_house.ticket.repository.TicketRepository;
+import com.ifeanyi.cinema_house.user.entity.User;
+import com.ifeanyi.cinema_house.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,7 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository repository;
     private final HallService hallService;
-    private final AdminService adminService;
+    private final UserService userService;
 
     @Override
     public Ticket create(TicketModel ticketModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
@@ -58,8 +60,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void delete(String admin,String id) throws NotFoundExceptionHandler {
-        adminService.get(admin);
+    public void delete(String admin, String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+        Util.isUserAdmin(admin, userService);
         repository.delete(get(id));
     }
 }

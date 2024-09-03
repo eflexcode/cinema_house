@@ -1,10 +1,12 @@
 package com.ifeanyi.cinema_house.movie.service;
 
-import com.ifeanyi.cinema_house.admin.service.AdminService;
+import com.ifeanyi.cinema_house.Util;
+import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.movie.entity.Movie;
 import com.ifeanyi.cinema_house.movie.model.MovieModel;
 import com.ifeanyi.cinema_house.movie.repository.MovieRepo;
+import com.ifeanyi.cinema_house.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +20,12 @@ import java.util.List;
 public class MovieServiceImpl implements MovieService{
 
     private final MovieRepo movieRepo;
-    private final AdminService adminService;
+    private final UserService userService;
 
     @Override
-    public Movie create(MovieModel movieModel) throws NotFoundExceptionHandler {
+    public Movie create(MovieModel movieModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+        Util.isUserAdmin(movieModel.getUpdatedByAdmin(), userService);
 
-        adminService.get(movieModel.getUpdatedByAdmin());
         Movie movie = new Movie();
         BeanUtils.copyProperties(movieModel,movie);
 
@@ -50,7 +52,7 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public Movie update(String id, MovieModel movieModel) throws NotFoundExceptionHandler {
+    public Movie update(String id, MovieModel movieModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
 
         Movie movie = get(id);
         movie.setTitle(movieModel.getTitle() != null ? movieModel.getTitle() : movie.getTitle());
@@ -63,7 +65,7 @@ public class MovieServiceImpl implements MovieService{
         movie.setVerticalImageUrl(movieModel.getVerticalImageUrl() != null ? movieModel.getVerticalImageUrl() : movie.getVerticalImageUrl());
         movie.setHorizontalImageUrl(movieModel.getHorizontalImageUrl() != null ? movieModel.getHorizontalImageUrl() : movie.getHorizontalImageUrl());
 
-        adminService.get(movieModel.getUpdatedByAdmin());
+        Util.isUserAdmin(movieModel.getUpdatedByAdmin(), userService);
         movie.setUpdatedByAdmin(movieModel.getUpdatedByAdmin() != null ? movieModel.getUpdatedByAdmin() : movie.getUpdatedByAdmin());
 
         if (movieModel.getCastIds() != null){
@@ -77,8 +79,8 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public void delete(String admin, String id) throws NotFoundExceptionHandler {
-        adminService.get(admin);
+    public void delete(String admin, String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+        Util.isUserAdmin(admin, userService);
         movieRepo.delete(get(id));
     }
 
