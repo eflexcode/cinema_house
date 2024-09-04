@@ -1,5 +1,6 @@
 package com.ifeanyi.cinema_house.hall.controller;
 
+import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.hall.entity.Hall;
 import com.ifeanyi.cinema_house.hall.model.HallModel;
@@ -18,7 +19,7 @@ public class HallController {
     private final HallService hallService;
 
     @PostMapping("/api/admin/hall")
-    public Hall create(@RequestBody HallModel hallModel) throws NotFoundExceptionHandler {
+    public Hall create(@RequestBody HallModel hallModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return hallService.create(hallModel);
     }
 
@@ -38,12 +39,12 @@ public class HallController {
     }
 
     @PutMapping("/api/admin/hall/{id}")
-    public Hall update(@PathVariable String id,@RequestBody HallModel hallModel) throws NotFoundExceptionHandler {
+    public Hall update(@PathVariable String id,@RequestBody HallModel hallModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return hallService.update(id,hallModel);
     }
 
     @DeleteMapping("/api/admin/hall/{admin}/{id}")
-    public void delete(@PathVariable String admin,@PathVariable String id) throws NotFoundExceptionHandler {
+    public void delete(@PathVariable String admin,@PathVariable String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
        hallService.delete(admin, id);
     }
 

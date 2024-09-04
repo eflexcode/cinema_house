@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
-    private final String[] openUrls = {"/api/admin/create","/api/admin/login","/api/user/create","/api/user/login"};
+    private final String[] openUrls = {"/api/user/create","/api/user/login"};
     private final UserService userService;
     private final JwtFilter jwtFilter;
 
@@ -61,7 +61,7 @@ public class SecurityConfig {
         httpSecurity.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement( managent-> managent.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers(openUrls).permitAll().anyRequest().authenticated());
+                .authorizeHttpRequests(auth -> auth.requestMatchers(openUrls).permitAll().anyRequest().permitAll());
 
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.authenticationProvider(authenticationProvider());

@@ -1,5 +1,6 @@
 package com.ifeanyi.cinema_house.showing.controller;
 
+import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.showing.entity.Showing;
 import com.ifeanyi.cinema_house.showing.model.ShowingModel;
@@ -18,7 +19,7 @@ public class ShowingController {
     private final ShowingService showingService;
 
     @PostMapping("/api/admin/showing")
-    public Showing create(@RequestBody ShowingModel showingModel) throws NotFoundExceptionHandler {
+    public Showing create(@RequestBody ShowingModel showingModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return showingService.create(showingModel);
     }
     @GetMapping("/api/showing/{id}")
@@ -32,12 +33,12 @@ public class ShowingController {
     }
 
     @PutMapping("/api/admin/showing/{id}")
-    public Showing update(@PathVariable String id, @RequestBody ShowingModel showingModel) throws NotFoundExceptionHandler {
+    public Showing update(@PathVariable String id, @RequestBody ShowingModel showingModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return showingService.update(id, showingModel);
     }
 
     @DeleteMapping("/api/admin/showing/{admin}/{id}")
-    public void delete(@PathVariable String admin, @PathVariable String id) throws NotFoundExceptionHandler {
+    public void delete(@PathVariable String admin, @PathVariable String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         showingService.delete(admin, id);
     }
 

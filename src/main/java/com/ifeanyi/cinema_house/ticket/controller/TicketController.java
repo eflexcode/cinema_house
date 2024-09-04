@@ -37,7 +37,7 @@ public class TicketController {
         return ticketService.getByHallId(id,pageable);
     }
     @DeleteMapping("/api/ticket/{admin}/{id}")
-    public void delete(@PathVariable String admin,@PathVariable String id) throws NotFoundExceptionHandler {
+    public void delete(@PathVariable String admin,@PathVariable String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         ticketService.delete(admin, id);
     }
 }

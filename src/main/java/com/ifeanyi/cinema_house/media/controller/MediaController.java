@@ -1,5 +1,6 @@
 package com.ifeanyi.cinema_house.media.controller;
 
+import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.media.model.Upload;
 import com.ifeanyi.cinema_house.media.model.UploadDestination;
@@ -20,15 +21,15 @@ public class MediaController {
     private final MediaService mediaService;
 
     @PostMapping("/api/media/hori/{id}/{admin}")
-    public String uploadHorizontal(@RequestParam("file") MultipartFile multipartFile, @PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler {
+    public String uploadHorizontal(@RequestParam("file") MultipartFile multipartFile, @PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return mediaService.uploadHoriMovie(multipartFile, id,admin);
     }
     @PostMapping("/api/media/vert/{id}/{admin}")
-    public String uploadVertical(@RequestParam("file") MultipartFile multipartFile,@PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler {
+    public String uploadVertical(@RequestParam("file") MultipartFile multipartFile,@PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return mediaService.uploadVertMovie(multipartFile, id,admin);
     }
     @PostMapping("/api/media/cast/{id}/{admin}")
-    public String uploadCast(@RequestParam("file") MultipartFile multipartFile,@PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler {
+    public String uploadCast(@RequestParam("file") MultipartFile multipartFile,@PathVariable String id,@PathVariable String admin) throws IOException, NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return mediaService.uploadCast(multipartFile, id,admin);
     }
     @GetMapping("/api/media/{filename}")

@@ -4,6 +4,7 @@ import com.ifeanyi.cinema_house.cast.entity.Cast;
 import com.ifeanyi.cinema_house.cast.model.CastModel;
 import com.ifeanyi.cinema_house.cast.repository.CastRepo;
 import com.ifeanyi.cinema_house.cast.service.CastService;
+import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -20,7 +21,7 @@ public class CastController {
     private final CastService castService;
 
     @PostMapping("/api/admin/cast")
-    public Cast create(@RequestBody CastModel castModel) throws NotFoundExceptionHandler {
+    public Cast create(@RequestBody CastModel castModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return castService.create(castModel);
     }
     @GetMapping("/api/cast/{id}")
@@ -32,11 +33,11 @@ public class CastController {
         return castService.getByName(name, pageable);
     }
     @PutMapping("/api/admin/cast/{id}")
-    public Cast update(@PathVariable String id,@RequestBody CastModel castModel) throws NotFoundExceptionHandler {
+    public Cast update(@PathVariable String id,@RequestBody CastModel castModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return castService.update(id, castModel);
     }
     @DeleteMapping("/api/admin/cast/{admin}/{id}")
-    public void delete(@PathVariable String admin, @PathVariable String id) throws NotFoundExceptionHandler {
+    public void delete(@PathVariable String admin, @PathVariable String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         castService.delete(admin, id);
     }
 

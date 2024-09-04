@@ -1,5 +1,6 @@
 package com.ifeanyi.cinema_house.movie.controller;
 
+import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.movie.entity.Movie;
 import com.ifeanyi.cinema_house.movie.model.MovieModel;
@@ -19,7 +20,7 @@ public class MovieController {
     private final MovieService movieService;
 
     @PostMapping("/api/admin/movie")
-    public Movie create(@RequestBody MovieModel movieModel) throws NotFoundExceptionHandler {
+    public Movie create(@RequestBody MovieModel movieModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return movieService.create(movieModel);
     }
     @GetMapping("/api/movie/{id}")
@@ -35,11 +36,11 @@ public class MovieController {
         return movieService.getByGenre(genres, pageable);
     }
     @PutMapping("/api/admin/movie/{id}")
-    public Movie update(@PathVariable String id, MovieModel movieModel) throws NotFoundExceptionHandler {
+    public Movie update(@PathVariable String id, MovieModel movieModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         return movieService.update(id,movieModel);
     }
     @DeleteMapping ("/api/admin/movie/{admin}/{id}")
-    public void delete(@PathVariable String admin,@PathVariable String id) throws NotFoundExceptionHandler {
+    public void delete(@PathVariable String admin,@PathVariable String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
         movieService.delete(admin, id);
     }
 

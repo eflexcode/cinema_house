@@ -2,6 +2,7 @@ package com.ifeanyi.cinema_house.media.service;
 
 import com.ifeanyi.cinema_house.cast.model.CastModel;
 import com.ifeanyi.cinema_house.cast.service.CastService;
+import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
 import com.ifeanyi.cinema_house.media.model.Upload;
 import com.ifeanyi.cinema_house.movie.model.MovieModel;
@@ -28,7 +29,7 @@ public class MediaServiceImpl implements MediaService {
 
     // this is the only way i could think of (:
     @Override
-    public String uploadHoriMovie(MultipartFile multipartFile, String id, String admin) throws IOException, NotFoundExceptionHandler {
+    public String uploadHoriMovie(MultipartFile multipartFile, String id, String admin) throws IOException, NotFoundExceptionHandler, ForbiddenExceptionHandler {
         int i = multipartFile.getOriginalFilename().lastIndexOf('.');
         String fileName = String.valueOf(System.currentTimeMillis())+multipartFile.getOriginalFilename().substring(i);
 
@@ -48,7 +49,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public String uploadVertMovie(MultipartFile multipartFile,String id, String admin) throws IOException, NotFoundExceptionHandler {
+    public String uploadVertMovie(MultipartFile multipartFile,String id, String admin) throws IOException, NotFoundExceptionHandler, ForbiddenExceptionHandler {
         String fileName = String.valueOf(System.currentTimeMillis());
 
         File file = new File(uploadPath, fileName);
@@ -67,7 +68,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public String uploadCast(MultipartFile multipartFile, String id, String admin) throws IOException, NotFoundExceptionHandler {
+    public String uploadCast(MultipartFile multipartFile, String id, String admin) throws IOException, NotFoundExceptionHandler, ForbiddenExceptionHandler {
         String fileName = String.valueOf(System.currentTimeMillis());
 
         File file = new File(uploadPath, fileName);

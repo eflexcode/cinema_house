@@ -6,3 +6,6 @@ spring:
       database: CinemaHouse
       port: 27017
       host: localhost
+logging:
+  level:
+    web: error

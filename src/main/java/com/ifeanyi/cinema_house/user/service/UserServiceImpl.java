@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +17,11 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+//    private final PasswordEncoder passwordEncoder;
+
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Override
     public User create(UserModel userModel) {
@@ -22,6 +29,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
 
         BeanUtils.copyProperties(userModel, user);
+        user.setPassword(passwordEncoder().encode(userModel.getPassword()));
 
         return repository.save(user);
     }
