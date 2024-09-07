@@ -1,11 +1,17 @@
 package com.ifeanyi.cinema_house.user.service;
 
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.user.entity.Login;
+import com.ifeanyi.cinema_house.user.entity.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
 import com.ifeanyi.cinema_house.user.model.UserModel;
 import com.ifeanyi.cinema_house.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,11 +23,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
-//    private final PasswordEncoder passwordEncoder;
-
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User create(UserModel userModel) {
@@ -29,7 +31,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
 
         BeanUtils.copyProperties(userModel, user);
-        user.setPassword(passwordEncoder().encode(userModel.getPassword()));
+        user.setPassword(passwordEncoder.encode(userModel.getPassword()));
 
         return repository.save(user);
     }
@@ -60,5 +62,21 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
         return get(userId);
+    }
+
+    @Override
+    public Token login(Login login) throws NotFoundExceptionHandler {
+
+       User user =  getByEmail(login.getEmail());
+
+       if(passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+           
+       }
+        return null;
+    }
+
+    @Override
+    public User getByEmail(String email) throws NotFoundExceptionHandler {
+        return repository.findByEmail(email).orElseThrow(() -> new NotFoundExceptionHandler("No user found with email: " + email));
     }
 }

@@ -8,4 +8,6 @@ spring:
       host: localhost
 logging:
   level:
-    web: error
+    org:
+      springframework:
+         security: debug

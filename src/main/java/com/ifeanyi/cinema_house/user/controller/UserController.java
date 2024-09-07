@@ -1,6 +1,8 @@
 package com.ifeanyi.cinema_house.user.controller;
 
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.user.entity.Login;
+import com.ifeanyi.cinema_house.user.entity.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
 import com.ifeanyi.cinema_house.user.model.UserModel;
 import com.ifeanyi.cinema_house.user.service.UserService;
@@ -14,13 +16,21 @@ public class UserController {
 
     private final UserService userService;
 
+    User user = null;
+
     @PostMapping("/api/user/create")
     public User create(@RequestBody UserModel userModel) {
         return userService.create(userModel);
     }
 
+    @PostMapping("/api/user/login")
+    public Token login(@RequestBody Login login) {
+        return userService.login(login);
+    }
+
     @GetMapping("/api/user/{id}")
     public User get(@PathVariable String id) throws NotFoundExceptionHandler {
+//        user.getEmail();
         return userService.get(id);
     }
 

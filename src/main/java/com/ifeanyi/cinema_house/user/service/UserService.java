@@ -1,6 +1,8 @@
 package com.ifeanyi.cinema_house.user.service;
 
 import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.user.entity.Login;
+import com.ifeanyi.cinema_house.user.entity.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
 import com.ifeanyi.cinema_house.user.model.UserModel;
 
@@ -11,5 +13,8 @@ public interface UserService {
     User update(String id,UserModel userModel) throws NotFoundExceptionHandler;
     void delete(String id) throws NotFoundExceptionHandler;
     User getLoggedInUser() throws NotFoundExceptionHandler;
+
+    Token login(Login login) throws NotFoundExceptionHandler;
+    User getByEmail(String email) throws NotFoundExceptionHandler;
 
 }
