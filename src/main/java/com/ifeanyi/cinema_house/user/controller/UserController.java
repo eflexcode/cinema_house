@@ -1,6 +1,9 @@
 package com.ifeanyi.cinema_house.user.controller;
 
+import com.ifeanyi.cinema_house.exception.BadRequestException;
+import com.ifeanyi.cinema_house.exception.DuplicateException;
 import com.ifeanyi.cinema_house.exception.NotFoundException;
+import com.ifeanyi.cinema_house.exception.UnauthorizedException;
 import com.ifeanyi.cinema_house.user.entity.Login;
 import com.ifeanyi.cinema_house.user.entity.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
@@ -18,12 +21,12 @@ public class UserController {
     User user = null;
 
     @PostMapping("/api/user/create")
-    public User create(@RequestBody UserModel userModel) {
+    public User create(@RequestBody UserModel userModel) throws DuplicateException, BadRequestException {
         return userService.create(userModel);
     }
 
     @PostMapping("/api/user/login")
-    public Token login(@RequestBody Login login) throws NotFoundException {
+    public Token login(@RequestBody Login login) throws NotFoundException, UnauthorizedException {
         return userService.login(login);
     }
 
