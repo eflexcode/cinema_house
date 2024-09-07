@@ -1,6 +1,8 @@
 package com.ifeanyi.cinema_house.user.service;
 
 import com.ifeanyi.cinema_house.auth.service.JwtService;
+import com.ifeanyi.cinema_house.exception.BadRequestException;
+import com.ifeanyi.cinema_house.exception.DuplicateException;
 import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.exception.UnauthorizedException;
 import com.ifeanyi.cinema_house.user.entity.Login;
@@ -19,6 +21,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -28,7 +33,30 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
 
     @Override
-    public User create(UserModel userModel) {
+    public User create(UserModel userModel) throws DuplicateException, BadRequestException {
+
+        if (userModel.getEmail() == null || userModel.getPassword() == null){
+            throw new BadRequestException("Semantic errors email and password are required");
+        }
+
+        boolean present = repository.findByEmail(userModel.getEmail()).isPresent();
+
+        if (present){
+            throw new DuplicateException("A user already exist with this email: "+userModel.getEmail());
+        }
+
+        if (userModel.getPassword().length()<8){
+            throw new BadRequestException("password minimum length is 8 characters");
+        }
+
+        String regexPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$";
+
+        Pattern pattern = Pattern.compile(regexPattern);
+        Matcher matcher = pattern.matcher(userModel.getPassword());
+
+        if (!matcher.matches()){
+            throw new BadRequestException("password most contain number upper and lower case letter with special character");
+        }
 
         User user = new User();
 
@@ -47,7 +75,7 @@ public class UserServiceImpl implements UserService {
     public User update(String id, UserModel userModel) throws NotFoundException {
 
         User user = get(id);
-        user.setEmail(userModel.getEmail() != null ? userModel.getEmail() : user.getEmail());
+//        user.setEmail(userModel.getEmail() != null ? userModel.getEmail() : user.getEmail());
         user.setName(userModel.getName() != null ? userModel.getName() : user.getName());
         user.setPassword(userModel.getPassword() != null ? userModel.getPassword() : user.getPassword());
 
@@ -80,6 +108,7 @@ public class UserServiceImpl implements UserService {
        if(passwordEncoder.matches(login.getPassword(), user.getPassword())) {
            return new Token(jwtService.generateToken(user.getId()));
        }
+
       throw new UnauthorizedException("Invalid email or password");
     }
 
