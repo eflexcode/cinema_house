@@ -2,7 +2,6 @@ package com.ifeanyi.cinema_house.auth.filter;
 
 import com.ifeanyi.cinema_house.auth.service.AuthService;
 import com.ifeanyi.cinema_house.auth.service.JwtService;
-import com.ifeanyi.cinema_house.exception.JwtExceptionHandler;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

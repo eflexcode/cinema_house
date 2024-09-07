@@ -1,8 +1,8 @@
 package com.ifeanyi.cinema_house.movie.service;
 
 import com.ifeanyi.cinema_house.Util;
-import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
-import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.exception.ForbiddenException;
+import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.movie.entity.Movie;
 import com.ifeanyi.cinema_house.movie.model.MovieModel;
 import com.ifeanyi.cinema_house.movie.repository.MovieRepo;
@@ -23,7 +23,7 @@ public class MovieServiceImpl implements MovieService{
     private final UserService userService;
 
     @Override
-    public Movie create(MovieModel movieModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Movie create(MovieModel movieModel) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(movieModel.getUpdatedByAdmin(), userService);
 
         Movie movie = new Movie();
@@ -37,8 +37,8 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public Movie get(String id) throws NotFoundExceptionHandler {
-        return movieRepo.findById(id).orElseThrow(()-> new NotFoundExceptionHandler("No movie found with id: "+id));
+    public Movie get(String id) throws NotFoundException {
+        return movieRepo.findById(id).orElseThrow(()-> new NotFoundException("No movie found with id: "+id));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public Movie update(String id, MovieModel movieModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Movie update(String id, MovieModel movieModel) throws NotFoundException, ForbiddenException {
 
         Movie movie = get(id);
         movie.setTitle(movieModel.getTitle() != null ? movieModel.getTitle() : movie.getTitle());
@@ -79,7 +79,7 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public void delete(String admin, String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public void delete(String admin, String id) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(admin, userService);
         movieRepo.delete(get(id));
     }

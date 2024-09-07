@@ -4,11 +4,8 @@ import com.ifeanyi.cinema_house.Util;
 import com.ifeanyi.cinema_house.cast.entity.Cast;
 import com.ifeanyi.cinema_house.cast.model.CastModel;
 import com.ifeanyi.cinema_house.cast.repository.CastRepo;
-import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
-import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
-import com.ifeanyi.cinema_house.movie.entity.Movie;
-import com.ifeanyi.cinema_house.user.entity.User;
-import com.ifeanyi.cinema_house.user.role.UserRole;
+import com.ifeanyi.cinema_house.exception.ForbiddenException;
+import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +23,7 @@ public class CastServiceImpl implements CastService {
     private final CastRepo repo;
 
     @Override
-    public Cast create(CastModel castModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Cast create(CastModel castModel) throws NotFoundException, ForbiddenException {
 
         Util.isUserAdmin(castModel.getCreatedByAdmin(),userService);
 
@@ -42,8 +39,8 @@ public class CastServiceImpl implements CastService {
     }
 
     @Override
-    public Cast get(String id) throws NotFoundExceptionHandler {
-        return repo.findById(id).orElseThrow(() -> new NotFoundExceptionHandler("No cast found with id: " + id));
+    public Cast get(String id) throws NotFoundException {
+        return repo.findById(id).orElseThrow(() -> new NotFoundException("No cast found with id: " + id));
     }
 
     @Override
@@ -52,7 +49,7 @@ public class CastServiceImpl implements CastService {
     }
 
     @Override
-    public Cast update(String id, CastModel castModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Cast update(String id, CastModel castModel) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(castModel.getCreatedByAdmin(),userService);
 
         Cast cast = get(id);
@@ -65,7 +62,7 @@ public class CastServiceImpl implements CastService {
     }
 
     @Override
-    public void delete(String admin, String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public void delete(String admin, String id) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(admin,userService);
 
         repo.delete(get(id));

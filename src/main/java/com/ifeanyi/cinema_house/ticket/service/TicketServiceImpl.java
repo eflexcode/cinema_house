@@ -1,14 +1,13 @@
 package com.ifeanyi.cinema_house.ticket.service;
 
 import com.ifeanyi.cinema_house.Util;
-import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
-import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.exception.ForbiddenException;
+import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.hall.entity.Hall;
 import com.ifeanyi.cinema_house.hall.service.HallService;
 import com.ifeanyi.cinema_house.ticket.entity.Ticket;
 import com.ifeanyi.cinema_house.ticket.model.TicketModel;
 import com.ifeanyi.cinema_house.ticket.repository.TicketRepository;
-import com.ifeanyi.cinema_house.user.entity.User;
 import com.ifeanyi.cinema_house.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -27,7 +26,7 @@ public class TicketServiceImpl implements TicketService {
     private final UserService userService;
 
     @Override
-    public Ticket create(TicketModel ticketModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Ticket create(TicketModel ticketModel) throws NotFoundException, ForbiddenException {
 
         Hall hall = hallService.get(ticketModel.getHallId());
         Ticket ticket;
@@ -38,15 +37,15 @@ public class TicketServiceImpl implements TicketService {
             ticket.setCreatedAt(new Date());
 
         } else {
-            throw new ForbiddenExceptionHandler("Hall is full");
+            throw new ForbiddenException("Hall is full");
         }
 
         return repository.save(ticket);
     }
 
     @Override
-    public Ticket get(String id) throws NotFoundExceptionHandler {
-        return repository.findById(id).orElseThrow(() -> new NotFoundExceptionHandler("No ticket found with id: " + id));
+    public Ticket get(String id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("No ticket found with id: " + id));
     }
 
     @Override
@@ -60,7 +59,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void delete(String admin, String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public void delete(String admin, String id) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(admin, userService);
         repository.delete(get(id));
     }

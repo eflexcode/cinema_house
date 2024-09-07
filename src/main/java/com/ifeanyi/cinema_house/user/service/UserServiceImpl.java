@@ -1,6 +1,8 @@
 package com.ifeanyi.cinema_house.user.service;
 
-import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.auth.service.JwtService;
+import com.ifeanyi.cinema_house.exception.NotFoundException;
+import com.ifeanyi.cinema_house.exception.UnauthorizedException;
 import com.ifeanyi.cinema_house.user.entity.Login;
 import com.ifeanyi.cinema_house.user.entity.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
@@ -14,7 +16,6 @@ import org.springframework.beans.BeanUtils;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Override
     public User create(UserModel userModel) {
@@ -37,12 +39,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User get(String id) throws NotFoundExceptionHandler {
-        return repository.findById(id).orElseThrow(() -> new NotFoundExceptionHandler("No user found with id: " + id));
+    public User get(String id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("No user found with id: " + id));
     }
 
     @Override
-    public User update(String id, UserModel userModel) throws NotFoundExceptionHandler {
+    public User update(String id, UserModel userModel) throws NotFoundException {
 
         User user = get(id);
         user.setEmail(userModel.getEmail() != null ? userModel.getEmail() : user.getEmail());
@@ -53,30 +55,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String id) throws NotFoundExceptionHandler {
+    public void delete(String id) throws NotFoundException {
         repository.delete(get(id));
     }
 
     @Override
-    public User getLoggedInUser() throws NotFoundExceptionHandler {
+    public User getLoggedInUser() throws NotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
         return get(userId);
     }
 
     @Override
-    public Token login(Login login) throws NotFoundExceptionHandler {
+    public Token login(Login login) throws NotFoundException, UnauthorizedException {
 
-       User user =  getByEmail(login.getEmail());
+        User user;
+
+        try {
+             user =  getByEmail(login.getEmail());
+        }catch (NotFoundException foundException){
+            throw new UnauthorizedException("Invalid email or password");
+        }
 
        if(passwordEncoder.matches(login.getPassword(), user.getPassword())) {
-           
+           return new Token(jwtService.generateToken(user.getId()));
        }
-        return null;
+      throw new UnauthorizedException("Invalid email or password");
     }
 
     @Override
-    public User getByEmail(String email) throws NotFoundExceptionHandler {
-        return repository.findByEmail(email).orElseThrow(() -> new NotFoundExceptionHandler("No user found with email: " + email));
+    public User getByEmail(String email) throws NotFoundException {
+        return repository.findByEmail(email).orElseThrow(() -> new NotFoundException("No user found with email: " + email));
     }
 }

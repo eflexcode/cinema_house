@@ -1,6 +1,6 @@
 package com.ifeanyi.cinema_house.auth.service;
 
-import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,7 @@ public class AuthService {
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 try {
                     return userService.get(username);
-                } catch (NotFoundExceptionHandler e) {
+                } catch (NotFoundException e) {
                     throw new UsernameNotFoundException("No user found it id: "+username);
                 }
             }

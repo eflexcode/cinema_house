@@ -1,8 +1,8 @@
 package com.ifeanyi.cinema_house.showing.service;
 
 import com.ifeanyi.cinema_house.Util;
-import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
-import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.exception.ForbiddenException;
+import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.showing.entity.Showing;
 import com.ifeanyi.cinema_house.showing.model.ShowingModel;
 import com.ifeanyi.cinema_house.showing.repository.ShowingRepository;
@@ -22,7 +22,7 @@ public class ShowingServiceImpl implements ShowingService {
     private final UserService userService;
 
     @Override
-    public Showing create(ShowingModel showingModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Showing create(ShowingModel showingModel) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(showingModel.getAdminId(), userService);
 
         Showing showing = new Showing();
@@ -34,8 +34,8 @@ public class ShowingServiceImpl implements ShowingService {
     }
 
     @Override
-    public Showing get(String id) throws NotFoundExceptionHandler {
-        return showingRepo.findById(id).orElseThrow(() -> new NotFoundExceptionHandler("No hall found with id: " + id));
+    public Showing get(String id) throws NotFoundException {
+        return showingRepo.findById(id).orElseThrow(() -> new NotFoundException("No hall found with id: " + id));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ShowingServiceImpl implements ShowingService {
     }
 
     @Override
-    public Showing update(String id, ShowingModel showingModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Showing update(String id, ShowingModel showingModel) throws NotFoundException, ForbiddenException {
 
         Util.isUserAdmin(showingModel.getAdminId(), userService);
 
@@ -58,7 +58,7 @@ public class ShowingServiceImpl implements ShowingService {
     }
 
     @Override
-    public void delete(String admin, String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public void delete(String admin, String id) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(admin, userService);
         showingRepo.delete(get(id));
     }

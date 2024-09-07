@@ -1,8 +1,8 @@
 package com.ifeanyi.cinema_house.hall.service;
 
 import com.ifeanyi.cinema_house.Util;
-import com.ifeanyi.cinema_house.exception.ForbiddenExceptionHandler;
-import com.ifeanyi.cinema_house.exception.NotFoundExceptionHandler;
+import com.ifeanyi.cinema_house.exception.ForbiddenException;
+import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.hall.entity.Hall;
 import com.ifeanyi.cinema_house.hall.model.HallModel;
 import com.ifeanyi.cinema_house.hall.repository.HallRepo;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class HallServiceImpl implements HallService {
     private final UserService userService;
 
     @Override
-    public Hall create(HallModel hallModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Hall create(HallModel hallModel) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(hallModel.getUpdatedByAdmin(), userService);
         Hall hall = new Hall();
 
@@ -34,8 +33,8 @@ public class HallServiceImpl implements HallService {
     }
 
     @Override
-    public Hall get(String id) throws NotFoundExceptionHandler {
-        return repo.findById(id).orElseThrow(() -> new NotFoundExceptionHandler("No hall found with id: " + id));
+    public Hall get(String id) throws NotFoundException {
+        return repo.findById(id).orElseThrow(() -> new NotFoundException("No hall found with id: " + id));
     }
 
     @Override
@@ -44,12 +43,12 @@ public class HallServiceImpl implements HallService {
     }
 
     @Override
-    public Hall findByHallNumber(Integer hallNumber) throws NotFoundExceptionHandler {
-        return repo.findByHallNumber(hallNumber).orElseThrow(() -> new NotFoundExceptionHandler("No hall found with hall number: " + hallNumber));
+    public Hall findByHallNumber(Integer hallNumber) throws NotFoundException {
+        return repo.findByHallNumber(hallNumber).orElseThrow(() -> new NotFoundException("No hall found with hall number: " + hallNumber));
     }
 
     @Override
-    public Hall update(String id, HallModel hallModel) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public Hall update(String id, HallModel hallModel) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(hallModel.getUpdatedByAdmin(), userService);
         Hall hall = get(id);
         hall.setHallNumber(hallModel.getHallNumber() != null ? hallModel.getHallNumber() : hall.getHallNumber());
@@ -61,7 +60,7 @@ public class HallServiceImpl implements HallService {
     }
 
     @Override
-    public void delete(String admin, String id) throws NotFoundExceptionHandler, ForbiddenExceptionHandler {
+    public void delete(String admin, String id) throws NotFoundException, ForbiddenException {
         Util.isUserAdmin(admin, userService);
         repo.delete(get(id));
     }
