@@ -10,6 +10,7 @@ import com.ifeanyi.cinema_house.user.entity.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
 import com.ifeanyi.cinema_house.user.model.UserModel;
 import com.ifeanyi.cinema_house.user.repository.UserRepository;
+import com.ifeanyi.cinema_house.user.role.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 //import org.springframework.security.core.Authentication;
@@ -35,18 +36,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(UserModel userModel) throws DuplicateException, BadRequestException {
 
-        if (userModel.getEmail() == null || userModel.getPassword() == null){
-            throw new BadRequestException("Semantic errors email and password are required");
+        if (userModel.getEmail() == null || userModel.getPassword() == null || userModel.getUserType() == null) {
+            throw new BadRequestException("Semantic errors email, password and userType are required");
         }
 
         boolean present = repository.findByEmail(userModel.getEmail()).isPresent();
 
-        if (present){
-            throw new DuplicateException("A user already exist with this email: "+userModel.getEmail());
+        if (present) {
+            throw new DuplicateException("A user already exist with this email: " + userModel.getEmail());
         }
 
-        if (userModel.getPassword().length()<8){
-            throw new BadRequestException("password minimum length is 8 characters");
+        if (userModel.getPassword().length() < 8) {
+            throw new BadRequestException("Password minimum length is 8 characters");
         }
 
         String regexPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$";
@@ -54,14 +55,15 @@ public class UserServiceImpl implements UserService {
         Pattern pattern = Pattern.compile(regexPattern);
         Matcher matcher = pattern.matcher(userModel.getPassword());
 
-        if (!matcher.matches()){
-            throw new BadRequestException("password most contain number upper and lower case letter with special character");
+        if (!matcher.matches()) {
+            throw new BadRequestException("Password most contain number upper and lower case letter with special character");
         }
 
         User user = new User();
 
         BeanUtils.copyProperties(userModel, user);
         user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+//        user.setUserType(UserRole.USER);
 
         return repository.save(user);
     }
@@ -97,23 +99,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public Token login(Login login) throws NotFoundException, UnauthorizedException, BadRequestException {
 
-        if (login.getEmail() == null || login.getPassword() == null){
+        if (login.getEmail() == null || login.getPassword() == null) {
             throw new BadRequestException("Semantic errors email and password are required");
         }
 
         User user;
 
         try {
-             user =  getByEmail(login.getEmail());
-        }catch (NotFoundException foundException){
+            user = getByEmail(login.getEmail());
+        } catch (NotFoundException foundException) {
             throw new UnauthorizedException("Invalid email or password");
         }
 
-       if(passwordEncoder.matches(login.getPassword(), user.getPassword())) {
-           return new Token(jwtService.generateToken(user.getId()));
-       }
+        if (passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+            return new Token(jwtService.generateToken(user.getId()));
+        }
 
-      throw new UnauthorizedException("Invalid email or password");
+        throw new UnauthorizedException("Invalid email or password");
     }
 
     @Override
