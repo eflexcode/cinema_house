@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity(debug = false)
 public class SecurityConfig {
 
     private final String[] openUrls = {"/api/user/create","/api/user/login"};
@@ -56,10 +57,11 @@ public class SecurityConfig {
         httpSecurity.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement( managent-> managent.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers(openUrls).permitAll().anyRequest().permitAll());
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/create","/api/user/login").permitAll().anyRequest().authenticated());
 
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.authenticationProvider(authenticationProvider());
+        httpSecurity.httpBasic(Customizer.withDefaults());
 
       return httpSecurity.build();
     }

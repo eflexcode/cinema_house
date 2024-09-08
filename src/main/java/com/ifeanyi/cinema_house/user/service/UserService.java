@@ -17,7 +17,7 @@ public interface UserService {
     void delete(String id) throws NotFoundException;
     User getLoggedInUser() throws NotFoundException;
 
-    Token login(Login login) throws NotFoundException, UnauthorizedException;
+    Token login(Login login) throws NotFoundException, UnauthorizedException, BadRequestException;
     User getByEmail(String email) throws NotFoundException;
 
 }

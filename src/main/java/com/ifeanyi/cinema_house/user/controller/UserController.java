@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/api/user/login")
-    public Token login(@RequestBody Login login) throws NotFoundException, UnauthorizedException {
+    public Token login(@RequestBody Login login) throws NotFoundException, UnauthorizedException, BadRequestException {
         return userService.login(login);
     }
 

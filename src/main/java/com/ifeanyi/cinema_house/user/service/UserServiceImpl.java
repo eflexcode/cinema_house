@@ -95,7 +95,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Token login(Login login) throws NotFoundException, UnauthorizedException {
+    public Token login(Login login) throws NotFoundException, UnauthorizedException, BadRequestException {
+
+        if (login.getEmail() == null || login.getPassword() == null){
+            throw new BadRequestException("Semantic errors email and password are required");
+        }
 
         User user;
 
