@@ -17,6 +17,8 @@ import org.springframework.beans.BeanUtils;
 //import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+//    private final AuthenticationManager authenticationManager;
 
     @Override
     public User create(UserModel userModel) throws DuplicateException, BadRequestException {
@@ -99,6 +102,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Token login(Login login) throws NotFoundException, UnauthorizedException, BadRequestException {
 
+//        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(),login.getPassword()));
+
         if (login.getEmail() == null || login.getPassword() == null) {
             throw new BadRequestException("Semantic errors email and password are required");
         }
@@ -111,7 +116,7 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedException("Invalid email or password");
         }
 
-        if (passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(login.getPassword(), user.getPassword()) && user.isEnabled()) {
             return new Token(jwtService.generateToken(user.getId()));
         }
 

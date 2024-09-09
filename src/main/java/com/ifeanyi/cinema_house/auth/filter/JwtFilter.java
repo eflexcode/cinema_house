@@ -38,14 +38,14 @@ public class JwtFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
 
             jwt = header.substring(7);
-            System.out.println("JJJJJJJWWWWTTTT   "+jwt);
+//            System.out.println("JJJJJJJWWWWTTTT   "+jwt);
 
             try {
                 userID = service.extractUsername(jwt);
             } catch (IllegalArgumentException e) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unable to get token");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to get token");
             } catch (ExpiredJwtException e) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Jwt token expired");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Jwt token expired");
             }
 
         }
@@ -56,7 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (service.verifyToken(jwt,userDetails)){
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(
+                        new UsernamePasswordAuthenticationToken(userDetails,
                                 null,
                                 userDetails.getAuthorities()
                         );
