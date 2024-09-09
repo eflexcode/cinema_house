@@ -4,8 +4,8 @@ import com.ifeanyi.cinema_house.exception.BadRequestException;
 import com.ifeanyi.cinema_house.exception.DuplicateException;
 import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.exception.UnauthorizedException;
-import com.ifeanyi.cinema_house.user.entity.Login;
-import com.ifeanyi.cinema_house.user.entity.Token;
+import com.ifeanyi.cinema_house.user.model.Login;
+import com.ifeanyi.cinema_house.user.model.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
 import com.ifeanyi.cinema_house.user.model.UserModel;
 

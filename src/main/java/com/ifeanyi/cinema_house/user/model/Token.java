@@ -1,4 +1,4 @@
-package com.ifeanyi.cinema_house.user.entity;
+package com.ifeanyi.cinema_house.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -25,6 +25,7 @@ public class User  implements UserDetails {
     @JsonIgnore
     private String password;
     private UserRole userType;
+    private boolean enable;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -45,4 +46,8 @@ public class User  implements UserDetails {
         return id;
     }
 
+    @Override
+    public boolean isEnabled() {
+        return enable;
+    }
 }
