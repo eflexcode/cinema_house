@@ -80,6 +80,7 @@ public class UserServiceImpl implements UserService {
 //        user.setEmail(userModel.getEmail() != null ? userModel.getEmail() : user.getEmail());
         user.setName(userModel.getName() != null ? userModel.getName() : user.getName());
         user.setPassword(userModel.getPassword() != null ? userModel.getPassword() : user.getPassword());
+        user.setEnable(userModel.getEnable() != null ? userModel.getEnable() : user.getEnable());
 
         return repository.save(user);
     }

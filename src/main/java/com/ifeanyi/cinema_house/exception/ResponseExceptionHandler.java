@@ -37,4 +37,9 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorModel> badRequestExceptionHandler(BadRequestException badRequestException) {
         return new ResponseEntity<>(new ErrorModel(badRequestException.getMessage(), new Date(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(GoneException.class)
+    public ResponseEntity<ErrorModel> goneExceptionHandler(GoneException goneException) {
+        return new ResponseEntity<>(new ErrorModel(goneException.getMessage(), new Date(), HttpStatus.GONE.value()), HttpStatus.GONE);
+    }
 }

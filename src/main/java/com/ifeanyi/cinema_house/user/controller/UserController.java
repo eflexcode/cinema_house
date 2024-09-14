@@ -38,6 +38,13 @@ public class UserController {
 
     @PutMapping("/api/user/{id}")
     public User update(@PathVariable String id, @RequestBody UserModel userModel) throws NotFoundException {
+
+        try {
+            userModel.setEnable(null);
+        }catch (Exception ignored){
+            // make sure user cant manually update user enabled
+        }
+
         return userService.update(id, userModel);
     }
 

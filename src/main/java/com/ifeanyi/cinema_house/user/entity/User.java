@@ -25,7 +25,7 @@ public class User  implements UserDetails {
     @JsonIgnore
     private String password;
     private UserRole userType;
-    private boolean enable;
+    private Boolean enable;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
