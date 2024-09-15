@@ -1,13 +1,9 @@
 package com.ifeanyi.cinema_house.user.controller;
 
-import com.ifeanyi.cinema_house.exception.BadRequestException;
-import com.ifeanyi.cinema_house.exception.DuplicateException;
-import com.ifeanyi.cinema_house.exception.NotFoundException;
-import com.ifeanyi.cinema_house.exception.UnauthorizedException;
-import com.ifeanyi.cinema_house.user.model.Login;
-import com.ifeanyi.cinema_house.user.model.Token;
+import com.ifeanyi.cinema_house.exception.*;
+import com.ifeanyi.cinema_house.user.model.*;
 import com.ifeanyi.cinema_house.user.entity.User;
-import com.ifeanyi.cinema_house.user.model.UserModel;
+import com.ifeanyi.cinema_house.user.service.OtpService;
 import com.ifeanyi.cinema_house.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final OtpService otpService;
 
     User user = null;
 
@@ -41,11 +38,32 @@ public class UserController {
 
         try {
             userModel.setEnable(null);
-        }catch (Exception ignored){
+            userModel.setPassword(null);
+        } catch (Exception ignored) {
             // make sure user cant manually update user enabled
         }
 
         return userService.update(id, userModel);
+    }
+
+    @PostMapping("/api/user/otp/generate/{userId}")
+    public String generateOtp(@PathVariable String userId) {
+        return otpService.generateOtp(userId);
+    }
+
+    @PostMapping("/api/user/otp/verify}")
+    public String verifyOtp(@RequestBody VerifyOtp opt) throws NotFoundException, GoneException {
+        return otpService.verifyOtp(opt.getOtp());
+    }
+
+    @PostMapping("/api/user/password/send_reset/{id}")
+    public String sendReset(@PathVariable String id) {
+        return userService.generatePasswordResetToken(id);
+    }
+
+    @PostMapping("/api/user/password/reset/")
+    public String reset(@RequestBody VerifyPassword verifyPassword) throws ForbiddenException, BadRequestException, NotFoundException {
+        return userService.resetPassword(verifyPassword.getResetPasswordId(), verifyPassword.getFirstPassword(), verifyPassword.getSecondPassword());
     }
 
     @DeleteMapping("/api/user/{id}")

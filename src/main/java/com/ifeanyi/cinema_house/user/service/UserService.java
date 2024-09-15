@@ -1,9 +1,6 @@
 package com.ifeanyi.cinema_house.user.service;
 
-import com.ifeanyi.cinema_house.exception.BadRequestException;
-import com.ifeanyi.cinema_house.exception.DuplicateException;
-import com.ifeanyi.cinema_house.exception.NotFoundException;
-import com.ifeanyi.cinema_house.exception.UnauthorizedException;
+import com.ifeanyi.cinema_house.exception.*;
 import com.ifeanyi.cinema_house.user.model.Login;
 import com.ifeanyi.cinema_house.user.model.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
@@ -21,5 +18,6 @@ public interface UserService {
     User getByEmail(String email) throws NotFoundException;
 
     String generatePasswordResetToken(String id);
+    String resetPassword(String resetPasswordId,String firstPassword,String secondPassword) throws ForbiddenException, BadRequestException, NotFoundException;
 
 }

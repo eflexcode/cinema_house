@@ -51,7 +51,7 @@ public class SecurityConfig {
         httpSecurity.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement( managent-> managent.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/create","/api/user/login")
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/create","/api/user/login","/api/user/otp/*","/api/user/password/*")
                         .permitAll()
                         .anyRequest()
                         .authenticated());

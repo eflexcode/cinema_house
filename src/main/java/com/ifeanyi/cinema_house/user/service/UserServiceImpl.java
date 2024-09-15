@@ -1,14 +1,13 @@
 package com.ifeanyi.cinema_house.user.service;
 
 import com.ifeanyi.cinema_house.auth.service.JwtService;
-import com.ifeanyi.cinema_house.exception.BadRequestException;
-import com.ifeanyi.cinema_house.exception.DuplicateException;
-import com.ifeanyi.cinema_house.exception.NotFoundException;
-import com.ifeanyi.cinema_house.exception.UnauthorizedException;
+import com.ifeanyi.cinema_house.exception.*;
+import com.ifeanyi.cinema_house.user.entity.ResetPasswordToken;
 import com.ifeanyi.cinema_house.user.model.Login;
 import com.ifeanyi.cinema_house.user.model.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
 import com.ifeanyi.cinema_house.user.model.UserModel;
+import com.ifeanyi.cinema_house.user.repository.ResetPasswordRepository;
 import com.ifeanyi.cinema_house.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ResetPasswordRepository resetPasswordRepository;
 //    private final AuthenticationManager authenticationManager;
 
     @Override
@@ -124,5 +126,52 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByEmail(String email) throws NotFoundException {
         return repository.findByEmail(email).orElseThrow(() -> new NotFoundException("No user found with email: " + email));
+    }
+
+    @Override
+    public String generatePasswordResetToken(String id) {
+
+        ResetPasswordToken passwordToken = new ResetPasswordToken();
+        passwordToken.setId(id);
+        passwordToken.setExpireTime(new Date(System.currentTimeMillis() + 5 * 60000));
+        passwordToken.setToken(UUID.randomUUID().toString());
+
+        resetPasswordRepository.save(passwordToken);
+
+        return "Password reset link have been sent to your email";
+    }
+
+    @Override
+    public String resetPassword(String resetPasswordId,String firstPassword, String secondPassword) throws ForbiddenException, BadRequestException, NotFoundException {
+
+        ResetPasswordToken passwordToken = resetPasswordRepository.findById(resetPasswordId).orElseThrow(()-> new ForbiddenException("Operation not allowed"));
+
+        if (!firstPassword.equals(secondPassword)){
+            throw new BadRequestException("Password mismatch");
+        }
+
+        if (firstPassword.length() < 8) {
+            throw new BadRequestException("Password minimum length is 8 characters");
+        }
+
+        String regexPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$";
+
+        Pattern pattern = Pattern.compile(regexPattern);
+        Matcher matcher = pattern.matcher(firstPassword);
+
+        if (!matcher.matches()) {
+            throw new BadRequestException("Password most contain number upper and lower case letter with special character");
+        }
+
+        String encodedPassword = passwordEncoder.encode(firstPassword);
+
+        UserModel userModel = new UserModel();
+        userModel.setPassword(encodedPassword);
+
+        update(passwordToken.getUserId(),userModel);
+
+        resetPasswordRepository.deleteById(resetPasswordId);
+
+        return "Password reset successful you can login now";
     }
 }
