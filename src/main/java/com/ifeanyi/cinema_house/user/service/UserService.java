@@ -20,4 +20,6 @@ public interface UserService {
     Token login(Login login) throws NotFoundException, UnauthorizedException, BadRequestException;
     User getByEmail(String email) throws NotFoundException;
 
+    String generatePasswordResetToken(String id);
+
 }

@@ -17,7 +17,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class OtpServiceImpl implements OtpService {
 
-
     private final OtpRepository otpRepository;
     private final UserService userService;
 
@@ -58,7 +57,7 @@ public class OtpServiceImpl implements OtpService {
         userModel.setEnable(true);
 
         userService.update(otp.getUserId(),userModel);
-
+        delete(otp.getUserId());
         return "Email verification successful";
     }
 
