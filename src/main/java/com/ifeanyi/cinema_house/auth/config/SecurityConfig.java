@@ -5,6 +5,7 @@ import com.ifeanyi.cinema_house.auth.service.AuthService;
 import com.ifeanyi.cinema_house.exception.NotFoundException;
 import com.ifeanyi.cinema_house.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,15 +29,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity(debug = false)
 public class SecurityConfig {
 
-    private final String[] openUrls = {"/api/user/create","/api/user/login"};
-//    private final UserService userService;
+    private final String[] openUrls = {"/api/user/create", "/api/user/login", "/api/user/otp/generate", "/api/user/password"};
+    //    private final UserService userService;
     private final JwtFilter jwtFilter;
 
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
 
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
@@ -48,19 +49,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.cors(AbstractHttpConfigurer::disable)
+        httpSecurity
+                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement( managent-> managent.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/create","/api/user/login","/api/user/otp/*","/api/user/password/*")
+                .sessionManagement(managent -> managent.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/create", "/api/user/login")
                         .permitAll()
                         .anyRequest()
-                        .authenticated());
+                        .authenticated())
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.authenticationProvider(authenticationProvider());
-        httpSecurity.httpBasic(Customizer.withDefaults());
+//        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        httpSecurity.authenticationProvider(authenticationProvider());
+//        httpSecurity.httpBasic(Customizer.withDefaults());
 
-      return httpSecurity.build();
+
+        return httpSecurity.build();
     }
 
 }

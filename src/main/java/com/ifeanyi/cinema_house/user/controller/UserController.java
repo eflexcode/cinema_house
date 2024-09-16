@@ -46,12 +46,12 @@ public class UserController {
         return userService.update(id, userModel);
     }
 
-    @PostMapping("/api/user/otp/generate/{userId}")
-    public String generateOtp(@PathVariable String userId) {
-        return otpService.generateOtp(userId);
+    @PostMapping("/api/user/otp/generate")
+    public String generateOtp(@RequestBody GeneratePasswordModel generatePasswordModel) {
+        return otpService.generateOtp(generatePasswordModel.getUserId());
     }
 
-    @PostMapping("/api/user/otp/verify}")
+    @PostMapping("/api/user/otp/verify")
     public String verifyOtp(@RequestBody VerifyOtp opt) throws NotFoundException, GoneException {
         return otpService.verifyOtp(opt.getOtp());
     }
