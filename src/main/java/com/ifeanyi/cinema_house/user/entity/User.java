@@ -7,9 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +22,7 @@ public class User  implements UserDetails {
     @JsonIgnore
     private String password;
     private UserRole userType = UserRole.USER;
-    private Boolean enable = false;
+    private Boolean activated = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,6 +45,6 @@ public class User  implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enable;
+        return activated;
     }
 }

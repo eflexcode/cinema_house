@@ -11,6 +11,5 @@ import java.util.Optional;
 public interface OtpRepository extends MongoRepository<Otp, String> {
 
     Optional<Otp> findByOtp(Integer otp);
-    Optional<Otp> findByUserId(String userId);
 
 }

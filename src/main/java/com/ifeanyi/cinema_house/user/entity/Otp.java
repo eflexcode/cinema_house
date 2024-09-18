@@ -10,9 +10,9 @@ import java.util.Date;
 @Document
 public class Otp {
 
-    private String id;
+    private String id;// id is user id to avoid duplicate
     private Integer otp;
     private Date ExpireTime;
-    private String userId;
+//    private String userId;
 
 }

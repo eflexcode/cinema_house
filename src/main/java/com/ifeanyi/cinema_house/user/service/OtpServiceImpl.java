@@ -33,7 +33,7 @@ public class OtpServiceImpl implements OtpService {
         otp.setOtp(Integer.valueOf(formattedRandomNumber));
 
         otpRepository.save(otp);
-        //TODO send otp via email later
+        //TODO send user an email with a third party api
 
         return "Otp sent to your email";
     }
@@ -49,15 +49,16 @@ public class OtpServiceImpl implements OtpService {
         Otp otp = otpRepository.findByOtp(otpCode).orElseThrow(() -> new GoneException("Otp error"));
 
         if (new Date().after(otp.getExpireTime())) {
-            delete(otp.getUserId());
+            delete(otp.getId());
             throw new GoneException("Otp Expired");
         }
 
         UserModel userModel = new UserModel();
-        userModel.setEnable(true);
+        userModel.setActivated(true);
 
-        userService.update(otp.getUserId(),userModel);
-        delete(otp.getUserId());
+        userService.update(userModel);
+        delete(otp.getId());
+
         return "Email verification successful";
     }
 

@@ -27,6 +27,11 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtService service;
     private final AuthService authService;
 
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        return request.getServletPath().startsWith("/api/user/auth/create");
+//    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 

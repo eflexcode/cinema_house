@@ -10,7 +10,7 @@ public interface UserService {
 
     User create(UserModel userModel) throws DuplicateException, BadRequestException;
     User get(String id) throws NotFoundException;
-    User update(String id,UserModel userModel) throws NotFoundException;
+    User update(UserModel userModel) throws NotFoundException;
     void delete(String id) throws NotFoundException;
     User getLoggedInUser() throws NotFoundException;
 

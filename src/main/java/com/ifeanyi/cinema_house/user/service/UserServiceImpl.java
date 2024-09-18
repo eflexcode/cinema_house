@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
 
         BeanUtils.copyProperties(userModel, user);
         user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+        user.setActivated(false);
 //        user.setUserType(UserRole.USER);
 
         return repository.save(user);
@@ -76,13 +77,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(String id, UserModel userModel) throws NotFoundException {
+    public User update( UserModel userModel) throws NotFoundException {
 
-        User user = get(id);
+        User user = getLoggedInUser();
 //        user.setEmail(userModel.getEmail() != null ? userModel.getEmail() : user.getEmail());
         user.setName(userModel.getName() != null ? userModel.getName() : user.getName());
         user.setPassword(userModel.getPassword() != null ? userModel.getPassword() : user.getPassword());
-        user.setEnable(userModel.getEnable() != null ? userModel.getEnable() : user.getEnable());
+        user.setActivated(userModel.getActivated() != null ? userModel.getActivated() : user.getActivated());
 
         return repository.save(user);
     }
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedException("Invalid email or password");
         }
 
-        if (passwordEncoder.matches(login.getPassword(), user.getPassword()) && user.isEnabled()) {
+        if (passwordEncoder.matches(login.getPassword(), user.getPassword()) && user.getActivated()) {
             return new Token(jwtService.generateToken(user.getId()));
         }
 
@@ -168,7 +169,7 @@ public class UserServiceImpl implements UserService {
         UserModel userModel = new UserModel();
         userModel.setPassword(encodedPassword);
 
-        update(passwordToken.getUserId(),userModel);
+        update(userModel);
 
         resetPasswordRepository.deleteById(resetPasswordId);
 
