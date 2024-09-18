@@ -17,8 +17,6 @@ public class UserController {
     private final UserService userService;
     private final OtpService otpService;
 
-    User user = null;
-
     @PostMapping("/api/auth/create")
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody UserModel userModel) throws DuplicateException, BadRequestException {
@@ -30,7 +28,7 @@ public class UserController {
         return userService.login(login);
     }
 
-    @GetMapping("/api/user/")
+    @GetMapping("/api/user")
     public User get() throws NotFoundException {
         return userService.getLoggedInUser();
     }
@@ -45,7 +43,7 @@ public class UserController {
             // make sure user cant manually update user enabled
         }
 
-        return userService.update(userModel);
+        return userService.update(null,userModel);
     }
 
     @PostMapping("/api/auth/otp/generate")
@@ -63,9 +61,9 @@ public class UserController {
         return userService.generatePasswordResetToken(id);
     }
 
-    @PostMapping("/api/auth/password/reset/")
-    public String reset(@RequestBody VerifyPassword verifyPassword) throws ForbiddenException, BadRequestException, NotFoundException {
-        return userService.resetPassword(verifyPassword.getResetPasswordId(), verifyPassword.getFirstPassword(), verifyPassword.getSecondPassword());
+    @PostMapping("/api/auth/password/reset")
+    public String reset(@RequestBody VerifyPassword verifyPassword) throws ForbiddenException, BadRequestException, NotFoundException, GoneException {
+        return userService.resetPassword(verifyPassword);
     }
 
     @DeleteMapping("/api/user/{id}")

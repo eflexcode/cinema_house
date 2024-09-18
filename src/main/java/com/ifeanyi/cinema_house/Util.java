@@ -9,13 +9,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Util {
-
-
     public static void isUserAdmin(String adminId, UserService userService) throws ForbiddenException, NotFoundException {
         User user = userService.get(adminId);
         if (user.getUserType() != UserRole.ADMIN) {
             throw new ForbiddenException("User is not admin");
         }
     }
-
 }

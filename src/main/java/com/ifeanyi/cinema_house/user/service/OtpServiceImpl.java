@@ -56,7 +56,7 @@ public class OtpServiceImpl implements OtpService {
         UserModel userModel = new UserModel();
         userModel.setActivated(true);
 
-        userService.update(userModel);
+        userService.update(otp.getId(),userModel);
         delete(otp.getId());
 
         return "Email verification successful";

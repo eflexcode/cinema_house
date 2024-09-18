@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class VerifyPassword {
-    private String resetPasswordId;
+    private String token;
     private String firstPassword;
     private String secondPassword;
 }

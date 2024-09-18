@@ -7,6 +7,7 @@ import com.ifeanyi.cinema_house.user.model.Login;
 import com.ifeanyi.cinema_house.user.model.Token;
 import com.ifeanyi.cinema_house.user.entity.User;
 import com.ifeanyi.cinema_house.user.model.UserModel;
+import com.ifeanyi.cinema_house.user.model.VerifyPassword;
 import com.ifeanyi.cinema_house.user.repository.ResetPasswordRepository;
 import com.ifeanyi.cinema_house.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -77,9 +78,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update( UserModel userModel) throws NotFoundException {
+    public User update(String userId,UserModel userModel) throws NotFoundException {
 
-        User user = getLoggedInUser();
+        User user;
+
+        if (userId == null){
+            user = getLoggedInUser();
+        }
+
+         user = get(userId);
 //        user.setEmail(userModel.getEmail() != null ? userModel.getEmail() : user.getEmail());
         user.setName(userModel.getName() != null ? userModel.getName() : user.getName());
         user.setPassword(userModel.getPassword() != null ? userModel.getPassword() : user.getPassword());
@@ -98,6 +105,12 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
         return get(userId);
+    }
+
+    @Override
+    public String getLoggedInUserId() throws NotFoundException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
     @Override
@@ -143,35 +156,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String resetPassword(String resetPasswordId,String firstPassword, String secondPassword) throws ForbiddenException, BadRequestException, NotFoundException {
+    public String resetPassword(VerifyPassword verifyPassword) throws ForbiddenException, BadRequestException, NotFoundException, GoneException {
 
-        ResetPasswordToken passwordToken = resetPasswordRepository.findById(resetPasswordId).orElseThrow(()-> new ForbiddenException("Operation not allowed"));
+        ResetPasswordToken passwordToken = resetPasswordRepository.findByToken(verifyPassword.getToken()).orElseThrow(() -> new ForbiddenException("Invalid reset token"));
 
-        if (!firstPassword.equals(secondPassword)){
+        if (verifyPassword.getFirstPassword() == null || verifyPassword.getSecondPassword() == null) {
+            throw new BadRequestException("first and second password required");
+        }
+
+        if (!verifyPassword.getFirstPassword().equals(verifyPassword.getSecondPassword())) {
             throw new BadRequestException("Password mismatch");
         }
 
-        if (firstPassword.length() < 8) {
+        if (verifyPassword.getFirstPassword().length() < 8) {
             throw new BadRequestException("Password minimum length is 8 characters");
         }
 
         String regexPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$";
 
         Pattern pattern = Pattern.compile(regexPattern);
-        Matcher matcher = pattern.matcher(firstPassword);
+        Matcher matcher = pattern.matcher(verifyPassword.getFirstPassword());
 
         if (!matcher.matches()) {
             throw new BadRequestException("Password most contain number upper and lower case letter with special character");
         }
 
-        String encodedPassword = passwordEncoder.encode(firstPassword);
+        if (new Date().after(passwordToken.getExpireTime())) {
+            delete(passwordToken.getId());
+            throw new GoneException("Password reset token expired");
+        }
+
+        String encodedPassword = passwordEncoder.encode(verifyPassword.getFirstPassword());
 
         UserModel userModel = new UserModel();
         userModel.setPassword(encodedPassword);
 
-        update(userModel);
+        update(passwordToken.getId(),userModel);
 
-        resetPasswordRepository.deleteById(resetPasswordId);
+        resetPasswordRepository.deleteById(passwordToken.getId());
 
         return "Password reset successful you can login now";
     }
