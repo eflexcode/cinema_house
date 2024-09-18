@@ -16,10 +16,15 @@ A Spring boot project for cinema house management system
 ### System design
 Below is a diagram representation of system and classes i came up with and implemented
 
-<sub>Please note that the classes are missing some parameter(s) as i already created the image before i faced some challenges where i had to add parameter(s) and too lazy to redraw image
-</sup>
-#
+<code style="color : orange">🚨 Please note that some parameter(s) and classes are missing as i already created the image before i faced some challenges where i had to add parameter(s) and too lazy to redraw image 😁</code>
+
 <img src="readme_resource/CinemaHouse.jpg" width="1080" alt="postman image"/>
 
-#f03c15 text
+
+## API Endpoints
+
+
+
+
+
 
