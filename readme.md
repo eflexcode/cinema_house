@@ -20,8 +20,9 @@ Below is a diagram representation of system and classes i came up with and imple
 
 <img src="readme_resource/CinemaHouse.jpg" width="1080" alt="postman image"/>
 
+### Run
+clone project  run ``CinemaHouseApplication.java``
 
-## API Endpoints
 
 
 
