@@ -20,8 +20,14 @@ Below is a diagram representation of system and classes i came up with and imple
 
 <img src="readme_resource/CinemaHouse.jpg" width="1080" alt="postman image"/>
 
+### Security
+Implemented jwt with spring security and role base authentication
+
+### Database
+MongoDB
+
 ### Run
-clone project  run ``CinemaHouseApplication.java``
+Clone project  run ``CinemaHouseApplication.java``
 
 
 
